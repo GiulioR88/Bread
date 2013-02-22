@@ -21,47 +21,27 @@ class Form extends Node {
 		$this->addClass('form-horizontal');
 	}
 	/**
-	 * Add a new <input name=$args[0]['name'] type=$method  value=$args[0]['value'] id=$args[0]['id'] 
-	 * element into the form with the passed name,label,id,value and type.
-	 * Magic method : $method is the name of the method called and $args is an array with the param.
-	 * passed to the called method.
+	 * Add a new <input name type value id > element into the form with the passed 
+	 * name and the optional array $option=[labe,id,value].
 	 */
-	/*
-	public function __call($method, $args = Array()) {
-	  $controlGroup = $this->append('<div></div>');
-	  $controlGroup->addClass('control-group');
-	  if ($method == 'checkbox' or $method == 'radio') {
-	    $controls = $controlGroup->append('<div></div>');
-	    $controls->addClass('controls');
-	    $label = $controls->append('<label></label>')->text($args[1]);
-	    $label->addClass($method); // $method= radio or checkbox
-	    $input = $label->append('<input/>');
-	  } else {
-	    $label = $controlGroup->append('<label></label>')->text($args[1]);
-	    $label->addClass('control-label');
-	    $controls = $controlGroup->append('<div></div>');
-	    $controls->addClass('controls');
-	    $input = $controls->append('<input/>');
-	
-	  }
-	  $input->attr(array('name' => $args[0], 'type' => $method, 'value' => $args[2]));
-	  if ($args[3]!=null)
-	    $input->id = $args[3];
-	  $label->attr(array('for' => $input->id))
-	  return $input;
-	}*/
-	public function __call($method, $args = array()) {
 
+	public function __call($method, $args = array()) {
+		$name = array_shift($args);
+		$option = array_shift($args);
 		$controlGroup = $this->append('<div></div>');
 		$controlGroup->addClass('control-group');
 		if ($method == 'checkbox' or $method == 'radio') {
 			$controls = $controlGroup->append('<div></div>');
 			$controls->addClass('controls');
-			$label = $controls->append('<label></label>')->text($args[0]['label']);
+			$label = $controls->append('<label></label>');
+			if ($this->search($option, 'label'))
+				$label->text($option['label']);
 			$label->addClass($method); // $method= radio or checkbox
 			$input = $label->append('<input/>');
 		} else {
-			$label = $controlGroup->append('<label></label>')->text($args[0]['label']);
+			$label = $controlGroup->append('<label></label>');
+			if ($this->search($option, 'label'))
+				$label->text($option['label']);
 			$label->addClass('control-label');
 			$controls = $controlGroup->append('<div></div>');
 			$controls->addClass('controls');
@@ -69,10 +49,13 @@ class Form extends Node {
 
 		}
 
-		$input->attr(array('name' => $args[0]['name'], 'type' => $method, 'value' => $args[0]['value']));
-		$input->id = $args[0]['id'];
-		$label->attr(array('for' => $input->id));
-
+		$input->attr(array('name' => $name, 'type' => $method));
+		if ($this->search($option, 'value'))
+			$input->attr(array('value' => $option['value']));
+		if ($this->search($option, 'id')) {
+			$input->id = $option['id'];
+			$label->attr(array('for' => $input->id));
+		}
 		return $input;
 
 	}
@@ -131,6 +114,18 @@ class Form extends Node {
 			$option->attr(array('value' => $key));
 		}
 
+	}
+	/**
+	 * Search if an attribute $value exist in $arr 
+	 */
+	public function search($arr = array(), $value) {
+
+		if ($arr) {
+			foreach ($arr as $key => $val) {
+				if ($key == $value)
+					return true;
+			}
+		}
 	}
 
 }
