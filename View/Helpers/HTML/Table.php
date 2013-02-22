@@ -23,7 +23,7 @@ class Table extends Node {
   
   public function __construct(Page $page, $columns = array()) {
     parent::__construct($page, 'table');
-    $this->addClass('table');
+    $this->addClass('table table-stripped');
     $this->thead = $this->append('<thead></thead>')->append('<tr></tr>');
     $this->tbody = $this->append('<tbody></tbody>');
     $this->tfoot = $this->append('<tfoot></tfoot>');

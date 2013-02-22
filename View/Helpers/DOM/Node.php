@@ -151,13 +151,18 @@ class Node implements Interfaces\Node {
   public function attr($attributes) {
     $args = func_get_args();
     if (is_array($attributes)) {
-      $content = $this->document->__invoke($content);
+    	foreach ($this->nodes as $node) {
+	    	foreach ($attributes as $attribute => $value) {
+	    		$node->setAttribute($attribute, $value);
+	    	}
+    	}
+    	return $this;
     }
     elseif (!isset($args[1])) {
-      return $this->nodes[0]->getAttribute($attributes);
+      return $this->nodes[0]->getAttribute($args[0]);
     }
     foreach ($this->nodes as $node) {
-      $node->setAttribute($attributes, $args[1]);
+      $node->setAttribute($args[0], $args[1]);
     }
     return $this;
   }
