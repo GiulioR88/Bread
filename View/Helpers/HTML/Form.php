@@ -24,7 +24,6 @@ class Form extends Node {
 	 * Add a new <input name type value id > element into the form with the passed 
 	 * name and the optional array $option=[labe,id,value].
 	 */
-
 	public function __call($method, $args = array()) {
 		$name = array_shift($args);
 		$option = array_shift($args);
@@ -115,6 +114,7 @@ class Form extends Node {
 		}
 
 	}
+
 	/**
 	 * Search if an attribute $value exist in $arr 
 	 */
