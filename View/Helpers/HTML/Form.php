@@ -20,6 +20,7 @@ class Form extends Node {
 		parent::__construct($page, 'form');
 		$this->addClass('form-horizontal');
 	}
+	
 	/**
 	 * Add a new <input name type value id > element into the form with the passed 
 	 * name and the optional array $option=[labe,id,value].
@@ -33,13 +34,14 @@ class Form extends Node {
 			$controls = $controlGroup->append('<div></div>');
 			$controls->addClass('controls');
 			$label = $controls->append('<label></label>');
-			if ($this->search($option, 'label'))
+			if (array_key_exists('label', $option)){
 				$label->text($option['label']);
+			}
 			$label->addClass($method); // $method= radio or checkbox
 			$input = $label->append('<input/>');
 		} else {
 			$label = $controlGroup->append('<label></label>');
-			if ($this->search($option, 'label'))
+			if (array_key_exists('label', $option))
 				$label->text($option['label']);
 			$label->addClass('control-label');
 			$controls = $controlGroup->append('<div></div>');
@@ -49,9 +51,9 @@ class Form extends Node {
 		}
 
 		$input->attr(array('name' => $name, 'type' => $method));
-		if ($this->search($option, 'value'))
+		if (array_key_exists('value', $option))
 			$input->attr(array('value' => $option['value']));
-		if ($this->search($option, 'id')) {
+		if (array_key_exists('id',$option)) {
 			$input->id = $option['id'];
 			$label->attr(array('for' => $input->id));
 		}
@@ -117,6 +119,7 @@ class Form extends Node {
 
 	/**
 	 * Search if an attribute $value exist in $arr 
+	 * replaced by array_key_exist()
 	 */
 	public function search($arr = array(), $value) {
 
