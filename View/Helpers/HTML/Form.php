@@ -28,34 +28,42 @@ class Form extends Node {
 	public function __call($method, $args = array()) {
 		$name = array_shift($args);
 		$option = array_shift($args);
-		$controlGroup = $this->append('<div></div>');
-		$controlGroup->addClass('control-group');
+
 		if ($method == 'checkbox' or $method == 'radio') {
-			$controls = $controlGroup->append('<div></div>');
+			$controlGroup = $this->append('div');
+			$controlGroup->addClass('control-group');
+			$controls = $controlGroup->append('div');
 			$controls->addClass('controls');
-			$label = $controls->append('<label></label>');
+			$labe = $controls->append('label');
+
 			if (array_key_exists('label', $option)) {
-				$label->text($option['label']);
+				$labe->text($option['label']);
 			}
-			$label->addClass($method); // $method= radio or checkbox
-			$input = $label->append('<input/>');
+			$labe->addClass($method); // $method= radio or checkbox
+			$input = $labe->append('input');
 		} else {
-			$label = $controlGroup->append('<label></label>');
-			if (array_key_exists('label', $option))
-				$label->text($option['label']);
-			$label->addClass('control-label');
-			$controls = $controlGroup->append('<div></div>');
-			$controls->addClass('controls');
-			$input = $controls->append('<input/>');
+			$controls = $this->preSet();
+			$labe = $this('.control-label');		
+			if (array_key_exists('label', $option)) {
+				$ops = $option['label'];
+				$labe->text($ops);
+			}
+			$input = $controls->append('input');
 
 		}
 
 		$input->attr(array('name' => $name, 'type' => $method));
-		if (array_key_exists('value', $option))
+		if (array_key_exists('value', $option)) {
 			$input->attr(array('value' => $option['value']));
+		}
 		if (array_key_exists('id', $option)) {
-			$input->id = $option['id'];
-			$label->attr(array('for' => $input->id));
+			$input->attr(array('id' => $option['id']));
+			//$temp = $input->id = $option['id'];
+			//$input->id = $temp;
+			//$label->attr(array('for' => $input->id));
+			$pro=$input->attr('id');
+			$labe->attr(array('for' => $pro));
+			
 		}
 		return $input;
 
@@ -72,32 +80,32 @@ class Form extends Node {
 	 * Add a new <button type=$type name=$button> with the given name
 	 */
 	public function button($name, $type, $id = NULL) {
-		$controlGroup = $this->append('<div></div>');
+		$controlGroup = $this->append('div');
 		$controlGroup->addClass('control-group');
-		$controls = $controlGroup->append('<div></div>');
+		$controls = $controlGroup->append('div');
 		$controls->addClass('controls');
-		$btn = $controls->append('<button></button>')->text($name);
+		$btn = $controls->append('button')->text($name);
 		$btn->addClass('btn');
 		$btn->attr(array('name' => $name, 'type' => $type));
 		if ($id)
-			$btn->id = $id;
+			$btn->attr(array('id' => $id));
+		//$btn->id = $id;
 		return $btn;
 	}
 
 	/**
 	 * Add a new <textarea rows=$rows> with the number of rows passed to it
 	 */
-	public function textArea($label, $name, $rows = 4, $id = NULL) {
-		$controlGroup = $this->append('<div></div>');
-		$controlGroup->addCLass('control-group');
-		$controlLabel = $controlGroup->append('<label></label>')->text($label);
-		$controlLabel->addClass('control-label');
-		$controls = $controlGroup->append('<div></div>');
-		$controls->addClass('controls');
-		$textarea = $controls->append('<textarea></textarea>')->attr(array('name' => $name, 'rows' => $rows));
+	public function textArea($label, $name, $id = NULL, $rows = 4) {
+		$controlGroup = $this->preSet();
+		$labe = $this('.control-label');
+		$labe->text($label);
+		$textarea = $controlGroup->append('textarea')->attr(array('name' => $name, 'rows' => $rows));
 		if ($id) {
-			$textarea->id = $id;
-			$controlLabel->attr(array('for' => $textarea->id));
+			//$textarea->id = $id;
+			$textarea->attr(array('id' => $id));
+			$labe->attr(array('for' => $textarea->attr('id')));
+			
 		}
 		return $textarea;
 	}
@@ -106,20 +114,34 @@ class Form extends Node {
 	 * Add a new <select> with the options passed to it like a key=>value array
 	 */
 	public function select($label, $sel = Array()) {
-		$controlGroup = $this->append('<div></div>');
-		$controlGroup->addClass('control-group');
-		$label = $controlGroup->append('<label></label>')->text($label);
-		$label->addClass('control-label');
-		$controls = $controlGroup->append('<div></div>');
-		$controls->addClass('controls');
-		$select = $controls->append('<select></select>');
+		$controls = $this->preSet();
+		$this('label')->text($label);
+		$select = $controls->append('select');
 		foreach ($sel as $key => $op) {
-			$option = $select->append('<option></option>')->text($op);
+			$option = $select->append('option')->text($op);
 			$option->attr(array('value' => $key));
 		}
 
 	}
+	/**
+	 * Returns the var $controls that contains <div class='control-group'>
+	 * 																						<label class='control-label'>
+	 * 																								<div class='controls'>
+	 */
 
+	public function preSet() {
+		$controlGroup = $this->append('div');
+		$controlGroup->addCLass('control-group');
+		$controlLabel = $controlGroup->append('label');
+		$controlLabel->addClass('control-label');
+		$controls = $controlGroup->append('div');
+		$controls->addClass('controls');
+		return $controls;
+	}
+	/**TODO Sistemare l'inserimento degli ID tramite il __setID al posto di att(id)
+	 * e la funzionalità di accesso ai tag tramite 'nometag' 
+	 * 
+	 */
 	/**
 	 * Search if an attribute $value exist in $arr 
 	 * replaced by array_key_exist()

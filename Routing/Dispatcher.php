@@ -37,7 +37,7 @@ class Dispatcher {
         return Promise\When::reject(new Exceptions\NotFound($request->uri));
       }
       return call_user_func_array($callback, $arguments);
-    })->then(null, function (Exception $exception) use ($response) {
+    })->then(null, function ($exception) use ($response) {
       $response->status($exception->getCode());
       $response->end($exception->getMessage());
     });
