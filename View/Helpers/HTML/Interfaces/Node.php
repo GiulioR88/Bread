@@ -15,22 +15,33 @@
 
 namespace Bread\View\Helpers\HTML\Interfaces;
 
+use Bread\View\Helpers\DOM\Node;
+
 use Bread\View\Helpers\DOM;
 
 interface Node extends DOM\Interfaces\Node {
   /**
    * Adds the specified class(es) to each of the set of matched elements.
+   * 
+   * @param $class string|array
+   * @return Node
    */
   public function addClass($class);
 
   /**
    * Determine whether any of the matched elements are assigned the given class.
+   * 
+   * @param $class string
+   * @return bool
    */
   public function hasClass($class);
 
   /**
    * Remove a single class, multiple classes, or all classes from each element
    * in the set of matched elements.
+   * 
+   * @param $class string 
+   * @return Node 
    */
   public function removeClass($class);
 
@@ -38,12 +49,16 @@ interface Node extends DOM\Interfaces\Node {
    * Add or remove one or more classes from each element in the set of matched
    * elements, depending on either the class’s presence or the value of the
    * switch argument.
+   * 
+   * @param $class string|array
+   * @return Node
    */
   public function toggleClass($class);
 
   /**
    * Get the HTML contents of the first element in the set of matched elements
    * or set the HTML contents of every matched element.
+   * 
    */
   public function html();
 }

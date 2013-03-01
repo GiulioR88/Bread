@@ -44,6 +44,9 @@ class Node extends DOM\Node implements Interfaces\Node {
 
   /**
    * Adds the specified class(es) to each of the set of matched elements.
+   * 
+   * @param $class string|array
+   * @return Node 
    */
   public function addClass($class) {
     foreach ($this->nodes as $node) {
@@ -56,7 +59,11 @@ class Node extends DOM\Node implements Interfaces\Node {
 
   /**
    * Determine whether any of the matched elements are assigned the given class.
+   * 
+   * @param $class string
+   * @return bool
    */
+  
   public function hasClass($class) {
     foreach ($this->nodes as $node) {
       if (in_array($class, $this->getClasses($node))) {
@@ -69,6 +76,9 @@ class Node extends DOM\Node implements Interfaces\Node {
   /**
    * Remove a single class, multiple classes, or all classes from each element
    * in the set of matched elements.
+   * 
+   * @param $class string
+   * @return Node
    */
   public function removeClass($class) {
     foreach ($this->nodes as $node) {
@@ -81,6 +91,9 @@ class Node extends DOM\Node implements Interfaces\Node {
    * Add or remove one or more classes from each element in the set of matched
    * elements, depending on either the class’s presence or the value of the
    * switch argument.
+   * 
+   * @param $class string|array
+   * @return Node
    */
   public function toggleClass($class) {
     $classes = explode(' ', $class);
@@ -103,11 +116,22 @@ class Node extends DOM\Node implements Interfaces\Node {
     return;
   }
 
+  /**
+   * Get the classes of the given Node
+   * 
+   * @param $node Node
+   * @return multitype: array|string
+   */
   protected function getClasses($node) {
     $classes = $node->getAttribute('class');
     return $classes ? explode(' ', $classes) : array();
   }
-
+/**
+ * Set one or more classes for the given Node
+ * 
+ * @param $node Node
+ * @param $array string|array
+ */
   protected function setClasses($node, $array) {
     $class = implode(' ', array_unique($array));
     $node->setAttribute('class', $class);

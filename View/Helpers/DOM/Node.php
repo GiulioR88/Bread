@@ -46,6 +46,10 @@ class Node implements Interfaces\Node {
     }
     $this->position = 0;
   }
+  /**
+   *  
+   * 
+   */
 
   public function __clone() {
     foreach ($this->nodes as &$node) {
@@ -72,10 +76,23 @@ class Node implements Interfaces\Node {
     }
   }
   
+  /**
+   * Get the matched attribute 
+   * 
+   * @param $name string
+   * @return  string
+   */
+  
   public function __get($name) {
     return $this->attr($name);
   }
   
+  /**
+   * Set the attribute 
+   * 
+   * @param $name strig
+   * @param $value string
+   */
   public function __set($name, $value) {
     $this->attr($name, $value);
   }
@@ -88,26 +105,53 @@ class Node implements Interfaces\Node {
     return $this->document->__invoke($name, $this);
   }
 
+  /**
+   * Get the current node
+   * 
+   * @return Node
+   */
   public function current() {
     return new static($this->document, $this->nodes[$this->position]);
   }
 
+  /**
+   * Get the current position
+   * 
+   * @return string
+   */
   public function key() {
     return $this->position;
   }
 
+  /**
+   * Move to the next position 
+   * 
+   */
   public function next() {
     ++$this->position;
   }
-
+/**
+ * Set the position of the current node to 0
+ * 
+ */
   public function rewind() {
     $this->position = 0;
   }
 
+  /**
+   * Check the position of the current node
+   * 
+   * @return bool
+   */
   public function valid() {
     return isset($this->nodes[$this->position]);
   }
 
+  /**
+   * Get the number of node in the nodes array
+   * 
+   * @return integer
+   */
   public function count() {
     return count($this->nodes);
   }
@@ -115,6 +159,9 @@ class Node implements Interfaces\Node {
   /**
    * Insert content, specified by the parameter, after each element in the set
    * of matched elements.
+   * 
+   * @param $content string|Node
+   * @return Node
    */
   public function after($content) {
     if (!($content instanceof Node)) {
@@ -136,6 +183,9 @@ class Node implements Interfaces\Node {
   /**
    * Insert content, specified by the parameter, to the end of each element in
    * the set of matched elements.
+   * 
+   * @param $content string|Node
+   * @return Node
    */
   public function append($content) {
     if (!($content instanceof Node)) {
@@ -157,6 +207,9 @@ class Node implements Interfaces\Node {
   /**
    * Insert every element in the set of matched elements to the end of the
    * target.
+   * 
+   * @param $target Node
+   * @return Node
    */
   public function appendTo($target) {
     foreach ($target->nodes as $t) {
@@ -170,6 +223,9 @@ class Node implements Interfaces\Node {
   /**
    * Get the value of an attribute for the first element in the set of matched
    * elements or set one or more attributes for every matched element.
+   * 
+   * @param $attributes string|array
+   * @return array
    */
   public function attr($attributes) {
     $args = func_get_args();
@@ -190,7 +246,7 @@ class Node implements Interfaces\Node {
           if (true === $value) {
             $value = $attribute;
           }
-          $node->setAttribute($attribute, $value);
+          $node->$attribute = $value;
         }
       }
     }
@@ -200,6 +256,9 @@ class Node implements Interfaces\Node {
   /**
    * Insert content, specified by the parameter, before each element in the set
    * of matched elements.
+   * 
+   * @param $content Node|string
+   * @return Node
    */
   public function before($content) {
     if (!($content instanceof Node)) {
@@ -220,6 +279,8 @@ class Node implements Interfaces\Node {
 
   /**
    * Remove the set of matched elements from the DOM.
+   * 
+   * @return Node
    */
   public function detach() {
     foreach ($this->nodes as $node) {
@@ -230,6 +291,9 @@ class Node implements Interfaces\Node {
 
   /**
    * Insert every element in the set of matched elements after the target.
+   * 
+   * @param $target Node|string
+   * @return Node
    */
   public function insertAfter($target) {
     foreach ($target->nodes as $t) {
@@ -242,6 +306,9 @@ class Node implements Interfaces\Node {
 
   /**
    * Insert every element in the set of matched elements before the target.
+   *
+   * @param Node|string
+   * @return Node
    */
   public function insertBefore($target) {
     foreach ($target->nodes as $t) {
@@ -255,6 +322,9 @@ class Node implements Interfaces\Node {
   /**
    * Insert content, specified by the parameter, to the beginning of each
    * element in the set of matched elements.
+   * 
+   * @param $content Node|string
+   * @return Node
    */
   public function prepend($content) {
     if (!($content instanceof Node)) {
@@ -276,6 +346,9 @@ class Node implements Interfaces\Node {
   /**
    * Insert every element in the set of matched elements to the beginning of the
    * target.
+   * 
+   * @param $target Node|string
+   * @return Node
    */
   public function prependTo($target) {
     foreach ($target->nodes as $t) {
@@ -289,6 +362,9 @@ class Node implements Interfaces\Node {
   /**
    * Get the value of a property for the first element in the set of matched
    * elements or set one or more properties for every matched element.
+   * 
+   * @param $properties 
+   * @return string
    */
   public function prop($properties) {
     return call_user_func_array(array(
@@ -298,6 +374,8 @@ class Node implements Interfaces\Node {
 
   /**
    * Remove the set of matched elements from the DOM.
+   * 
+   * @return Node
    */
   public function remove() {
     return $this->detach();
@@ -305,6 +383,9 @@ class Node implements Interfaces\Node {
 
   /**
    * Remove an attribute from each element in the set of matched elements.
+   * 
+   * @param $attribute string
+   * @return  Node
    */
   public function removeAttr($attribute) {
     foreach ($this->nodes as $node) {
@@ -315,6 +396,9 @@ class Node implements Interfaces\Node {
 
   /**
    * Remove a property for the set of matched elements.
+   * 
+   * @param $property string 
+   * @return Node
    */
   public function removeProp($property) {
     $this->removeAttr($property);
@@ -342,6 +426,9 @@ class Node implements Interfaces\Node {
    * Get the combined text contents of each element in the set of matched
    * elements, including their descendants, or set the text contents of the
    * matched elements.
+   * 
+   * @param $text string
+   * @return string
    */
   public function text($text) {
     $text = func_get_args();
@@ -371,6 +458,8 @@ class Node implements Interfaces\Node {
   /**
    * Get the current value of the first element in the set of matched elements
    * or set the value of every matched element.
+   * 
+   * @return Node|string
    */
   public function val() {
     $args = func_get_args();
