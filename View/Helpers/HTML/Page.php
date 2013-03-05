@@ -68,7 +68,7 @@ class Page extends DOM\Document {
     return new Node($this, $element);
   }
   
-  public function load($filename) {
+  public function load($filename, $options = LIBXML_NOXMLDECL) {
     libxml_use_internal_errors(true);
     $this->document->loadHTMLFile($filename);
     $this->xpath = new DOMXPath($this->document);

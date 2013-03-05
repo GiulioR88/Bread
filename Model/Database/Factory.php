@@ -20,7 +20,6 @@ use Bread, Exception;
 class Factory {
   protected static $configuration = array(
     'drivers' => array(
-      'gettext' => 'Bread\L10n\Database\Gettext',
       'mongodb' => 'Bread\Model\Database\Driver\MongoDB',
       'couchdb' => 'Bread\Model\Database\Driver\CouchDB',
       'mysql' => 'Bread\Model\Database\Driver\MySQL'
@@ -30,7 +29,7 @@ class Factory {
   public static function create($url) {
     $scheme = parse_url($url, PHP_URL_SCHEME);
     if (!isset(static::$configuration['drivers'][$scheme])) {
-      throw new Exception('Driver for {$scheme} not found.');
+      throw new Exception("Driver for {$scheme} not found.");
     }
     $Driver = static::$configuration['drivers'][$scheme];
     return new $Driver($url);

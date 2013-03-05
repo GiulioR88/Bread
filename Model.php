@@ -24,7 +24,7 @@ abstract class Model extends Core\Dough implements JsonSerializable {
   protected static $cache;
   protected static $database;
   protected static $attributes = array();
-  private static $configuration = array(
+  protected static $configuration = array(
     'database' => array(
       'url' => 'mongodb://localhost/test'
     )
@@ -108,6 +108,7 @@ abstract class Model extends Core\Dough implements JsonSerializable {
     $configuration['attributes'] = $self::$attributes;
     $configuration = parent::configure($configuration);
     $self::$cache = Cache\Factory::create();
+    $self::$cache->clear();
     if (!isset(self::$database[$self])) {
       self::$database[$self] = Model\Database\Factory::create($self::get('database.url'));
     }

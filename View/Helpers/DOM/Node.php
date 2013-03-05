@@ -46,10 +46,6 @@ class Node implements Interfaces\Node {
     }
     $this->position = 0;
   }
-  /**
-   *  
-   * 
-   */
 
   public function __clone() {
     foreach ($this->nodes as &$node) {
@@ -75,18 +71,17 @@ class Node implements Interfaces\Node {
       }
     }
   }
-  
+
   /**
    * Get the matched attribute 
    * 
    * @param $name string
    * @return  string
    */
-  
   public function __get($name) {
-    return $this->attr($name);
+    return $this->nodes[0]->getAttribute($name);
   }
-  
+
   /**
    * Set the attribute 
    * 
@@ -94,7 +89,17 @@ class Node implements Interfaces\Node {
    * @param $value string
    */
   public function __set($name, $value) {
-    $this->attr($name, $value);
+    foreach ($this->nodes as $node) {
+      if (false === $value) {
+        $node->removeAttribute($name);
+      }
+      else {
+        if (true === $value) {
+          $value = $name;
+        }
+        $node->setAttribute($name, $value);
+      }
+    }
   }
 
   public function __invoke($name) {
@@ -130,10 +135,11 @@ class Node implements Interfaces\Node {
   public function next() {
     ++$this->position;
   }
-/**
- * Set the position of the current node to 0
- * 
- */
+
+  /**
+   * Set the position of the current node to 0
+   * 
+   */
   public function rewind() {
     $this->position = 0;
   }
@@ -237,18 +243,8 @@ class Node implements Interfaces\Node {
         $args[0] => $args[1]
       );
     }
-    foreach ($this->nodes as $node) {
-      foreach ($attributes as $attribute => $value) {
-        if (false === $value) {
-          $node->removeAttribute($attribute);
-        }
-        else {
-          if (true === $value) {
-            $value = $attribute;
-          }
-          $node->$attribute = $value;
-        }
-      }
+    foreach ($attributes as $attribute => $value) {
+      $this->$attribute = $value;
     }
     return $this;
   }
