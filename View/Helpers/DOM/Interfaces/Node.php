@@ -24,8 +24,8 @@ interface Node extends Iterator, Countable {
    * Insert content, specified by the parameter, after each element in the set
    * of matched elements.
    * 
-   * @param $content string|Node
-   * @return Node
+   * @param  string|Node $content
+   * @return self
    */
   public function after($content);
 

@@ -162,13 +162,6 @@ class Node implements Interfaces\Node {
     return count($this->nodes);
   }
 
-  /**
-   * Insert content, specified by the parameter, after each element in the set
-   * of matched elements.
-   * 
-   * @param $content string|Node
-   * @return Node
-   */
   public function after($content) {
     if (!($content instanceof Node)) {
       $content = call_user_func_array(array(
