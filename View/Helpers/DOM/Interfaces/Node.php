@@ -15,53 +15,36 @@
 
 namespace Bread\View\Helpers\DOM\Interfaces;
 
-use Bread\View\Helpers\DOM\Node;
-
 use Iterator, Countable;
 
 interface Node extends Iterator, Countable {
   /**
    * Insert content, specified by the parameter, after each element in the set
    * of matched elements.
-   * 
-   * @param  string|Node $content
-   * @return self
    */
   public function after($content);
 
   /**
    * Insert content, specified by the parameter, to the end of each element in
    * the set of matched elements.
-   * 
-   * @param $content string|Node
-   * @return Node
    */
   public function append($content);
 
   /**
    * Insert every element in the set of matched elements to the end of the
    * target.
-   * 
-   * @param $target Node
-   * @return Node
    */
   public function appendTo($target);
 
   /**
    * Get the value of an attribute for the first element in the set of matched
    * elements or set one or more attributes for every matched element.
-   * 
-   * @param $attributes string|array
-   * @return array
    */
   public function attr($attributes);
 
   /**
    * Insert content, specified by the parameter, before each element in the set
    * of matched elements.
-   * 
-   * @param $content Node|string
-   * @return Node
    */
   public function before($content);
 
@@ -74,8 +57,6 @@ interface Node extends Iterator, Countable {
 
   /**
    * Remove the set of matched elements from the DOM.
-   * 
-   * @return Node
    */
   public function detach();
 
@@ -88,73 +69,49 @@ interface Node extends Iterator, Countable {
 
   /**
    * Insert every element in the set of matched elements after the target.
-   * 
-   * @param $target Node|string
-   * @return Node
    */
   public function insertAfter($target);
 
   /**
    * Insert every element in the set of matched elements before the target.
-   * 
-   * @param Node|string
-   * @return Node
    */
   public function insertBefore($target);
 
   /**
    * Insert content, specified by the parameter, to the beginning of each
    * element in the set of matched elements.
-   * 
-   * @param $content Node|string
-   * @return Node
    */
   public function prepend($content);
 
   /**
    * Insert every element in the set of matched elements to the beginning of the
    * target.
-   * 
-   * @param $target Node|string
-   * @return Node
    */
   public function prependTo($target);
 
   /**
    * Get the value of a property for the first element in the set of matched
    * elements or set one or more properties for every matched element.
-   * 
-   * @param $properties 
-   * @return string
    */
   public function prop($properties);
 
   /**
    * Remove the set of matched elements from the DOM.
-   * 
-   * @return Node
    */
   public function remove();
 
   /**
    * Remove an attribute from each element in the set of matched elements.
-   * 
-   * @param $attribute string
-   * @return  Node
    */
   public function removeAttr($attribute);
 
   /**
    * Remove a property for the set of matched elements.
-   * 
-   * @param $property string 
-   * @return Node
    */
   public function removeProp($property);
 
   /**
    * Replace each target element with the set of matched elements.
-
    */
   public function replaceAll(Node $targets);
 
@@ -168,9 +125,6 @@ interface Node extends Iterator, Countable {
    * Get the combined text contents of each element in the set of matched
    * elements, including their descendants, or set the text contents of the
    * matched elements.
-   * 
-   * @param $text string
-   * @return string
    */
   public function text($text);
 
@@ -183,8 +137,6 @@ interface Node extends Iterator, Countable {
   /**
    * Get the current value of the first element in the set of matched elements
    * or set the value of every matched element.
-   * 
-   * @return Node|string
    */
   public function val();
 
