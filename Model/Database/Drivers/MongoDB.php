@@ -228,12 +228,8 @@ class MongoDB implements Database\Interfaces\Driver {
         }
       }
     }
-    $logics = array();
-    foreach ($recursion as $logic => $logicPromises) {
-      $logics[$logic] = Promise\When::all($logicPromises);
-    }
-    return Promise\When::all($logics, function ($logics) use ($search) {
-      foreach ($logics as $logic => $conditions) {
+    return Promise\When::all($recursion, function ($s) use ($search) {
+      foreach ($s as $logic => $conditions) {
         $search[$logic] = $conditions;
       }
       return $search;
