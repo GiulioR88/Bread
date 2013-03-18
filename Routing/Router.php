@@ -15,7 +15,10 @@
 
 namespace Bread\Routing;
 
+use Bread\Configuration\Manager as CM;
+use Bread\Dough\ClassLoader;
 use Bread\Networking\HTTP\Request;
+use Bread\Networking\HTTP\Response;
 use Bread\Networking\HTTP\Client\Exceptions;
 use Bread\Promise;
 use Bread\L10n\Inflector;
@@ -23,32 +26,41 @@ use Bread\L10n\Inflector;
 class Router {
   public static $routes = array();
 
-  public function route(Request $request) {
-    $routes = static::$routes;
-    foreach ($routes as $route) {
-      $route = new Route\Model($route);
-      if (preg_match($route->pattern, $request->uri, $matches)) {
-        if (isset($matches['controller'])) {
-          $ns = explode('/', $matches['controller']);
-          $ns = array_map('Bread\L10n\Inflector::camelize', $ns);
-          $matches['controller'] = implode(NS, $ns);
+  public function route(Request $request, Response $response) {
+    return Route\Model::fetch()->then(function ($routes) use ($request,
+      $response) {
+      $routes = array_merge($routes, array_map(function ($route) {
+        return new Route\Model($route);
+      }, (array) CM::get(__CLASS__, 'routes')));
+      foreach ($routes as $route) {
+        $matches = array();
+        if ($this->match($route, $request, $matches)) {
+          $action = isset($matches['action']) ? $matches['action']
+            : $route->action;
+          $arguments = array_intersect_key($matches, array_flip($route->arguments));
+          $arguments = array_merge($route->defaults, $arguments);
+          if (!ClassLoader::classExists($route->controller)) {
+            break;
+          }
+          $controller = new $route->controller($request, $response);
+          $callback = array($controller, $action);
+          if (!is_callable($callback)) {
+            break;
+          }
+          return array($callback, $arguments);
         }
-        $matches = array_merge(array(
-          'controller' => null, 'action' => null
-        ), $route->defaults, $matches);
-        if (isset($matches['namespace'])) {
-          $matches['controller'] = $matches['namespace'] . NS . $matches['controller'] . NS . 'Controller';
-        }
-        if (!is_subclass_of($matches['controller'], 'Bread\Controller')) {
-          return Promise\When::reject(new Exceptions\NotFound(
-            $matches['controller']));
-        }
-        $arguments = array_intersect_key($matches, array_flip((array) $route->arguments));
-        return Promise\When::resolve(array(
-          $matches['controller'], $matches['action'], $arguments
-        ));
       }
+      throw new Exceptions\NotFound($request->uri);
+    });
+  }
+
+  protected function match(Route\Model $route, Request $request, &$matches) {
+    foreach ($route->patterns as $attribute => $pattern) {
+      if (!preg_match('/'.str_replace('/', '\/', $pattern) . '/', $request->$attribute, $_matches)) {
+        return false;
+      }
+      $matches = array_merge($matches, $_matches);
     }
-    return Promise\When::reject(new Exceptions\NotFound($request->uri));
+    return true;
   }
 }
